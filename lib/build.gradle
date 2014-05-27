@@ -1,16 +1,5 @@
 apply plugin: 'android-library'
-
 apply plugin: 'maven'
-
-uploadArchives {
-    repositories.mavenDeployer {
-        repository(url: "file:///Users/hostova1/git/Logger/mvn-repo")
-    }
-}
-
-version = '1.0.0'
-group = 'uk.co.hoomi'
-archivesBaseName = "logger"
 
 android {
     compileSdkVersion 19
@@ -34,3 +23,15 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:19.+'
 }
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://localhost/Users/hostova1/git/Logger/mvn-repo")
+        }
+    }
+}
+
+version = '1.0.0'
+group = 'uk.co.hoomi'
+archivesBaseName = 'logger'
