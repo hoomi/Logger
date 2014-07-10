@@ -2,6 +2,10 @@ package uk.co.hoomi.logger;
 
 import android.util.Log;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.UnknownHostException;
+
 public class Logger {
 
     private static boolean SHOW_LINE_NUMBER = false;
@@ -62,6 +66,12 @@ public class Logger {
         }
     }
 
+    public static void e(Object object, String message,Throwable tr) {
+        if (BuildConfig.DEBUG && DEBUG) {
+            Log.e(object.getClass().getSimpleName(), message,tr);
+        }
+    }
+
     public static void v(Object object, String message) {
         if (BuildConfig.DEBUG && DEBUG) {
             String debugMessage = message;
@@ -76,4 +86,5 @@ public class Logger {
         StackTraceElement trace = Thread.currentThread().getStackTrace()[4];
         return trace.getFileName() + " ===> " + trace.getClassName() + " ===> " + trace.getMethodName() + " ===> " + trace.getLineNumber() + "\n";
     }
+
 }

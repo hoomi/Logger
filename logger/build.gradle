@@ -1,0 +1,97 @@
+apply plugin: 'android-library'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+version = "1.0.0"
+group = "com.github.hoomi"
+
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+configurations {
+    archives {
+        extendsFrom configurations.default
+    }
+}
+
+
+
+
+signing {
+    required { has("release") && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+uploadArchives {
+    configuration = configurations.archives
+    repositories.mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+        if (buildType.releaseMode) {
+            println 'RELEASE BUILD'
+            sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            repository(url: sonatypeRepositoryUrl) {
+                authentication(userName: sonatypeUsername,
+                        password: sonatypePassword)
+            }
+        } else {
+            println 'DEBUG BUILD'
+            sonatypeRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            repository(url: sonatypeRepositoryUrl) {
+                authentication(userName: sonatypeUsername,
+                        password: sonatypePassword)
+            }
+        }
+
+
+        pom.project {
+            name 'Android Logging Library'
+            packaging 'aar'
+            description 'Logging library for Android'
+            url 'https://github.com/hoomi/Logger'
+
+            scm {
+                url 'scm:git@github.com:hoomi/Logger.git'
+                connection 'scm:git@github.com:hoomi/Logger.git'
+                developerConnection 'scm:git@github.com:hoomi/Logger.git'
+            }
+
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+
+            developers {
+                developer {
+                    id 'hoomi2010'
+                    name 'Hooman Ostovari'
+                    email 'hoomi2010@gmail.com'
+                }
+            }
+        }
+    }
+}
+
