@@ -51,18 +51,12 @@ uploadArchives {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            if (buildType.releaseMode) {
-                println 'RELEASE BUILD'
-                sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-                repository(url: sonatypeRepositoryUrl) {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
-                }
-            } else {
-                println 'DEBUG BUILD'
-                sonatypeRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots"
-                repository(url: sonatypeRepositoryUrl) {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
-                }
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
             }
 
             pom.project {
@@ -97,50 +91,4 @@ uploadArchives {
         }
     }
 }
-
-//uploadArchives {
-//    configuration = configurations.archives
-//    repositories.mavenDeployer {
-//        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-//        if (buildType.releaseMode) {
-//            println 'RELEASE BUILD'
-//            sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-//            repository(url: sonatypeRepositoryUrl) {
-//                authentication(userName: sonatypeUsername,
-//                        password: sonatypePassword)
-//            }
-//        } else {
-//            println 'DEBUG BUILD'
-//            sonatypeRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots"
-//            repository(url: sonatypeRepositoryUrl) {
-//                authentication(userName: sonatypeUsername,
-//                        password: sonatypePassword)
-//            }
-//        }
-//
-//
-//        pom.project {
-//            name 'Android Logging Library'
-//            packaging 'aar'
-//            description 'Logging library for Android'
-//            url 'https://github.com/hoomi/Logger'
-//
-//            scm {
-//                url 'scm:git@github.com:hoomi/Logger.git'
-//                connection 'scm:git@github.com:hoomi/Logger.git'
-//                developerConnection 'scm:git@github.com:hoomi/Logger.git'
-//            }
-//
-//            licenses {
-//                license {
-//                    name 'The Apache Software License, Version 2.0'
-//                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-//                    distribution 'repo'
-//                }
-//            }
-//
-
-//        }
-//    }
-//}
 
